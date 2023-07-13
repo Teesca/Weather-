@@ -1,0 +1,37 @@
+﻿@page "/details/{day}"
+@using WeatherApplication.Data;
+@inject WeatherForecastService WeatherService
+
+<h3>Weather Details</h3>
+
+@if (WeatherDetails != null)
+{
+    <p>
+        <strong>Day:</strong> @WeatherDetails.Day<br />
+        <strong>Min Temperature:</strong> @WeatherDetails.MinTemperature°C<br />
+        <strong>Max Temperature:</strong> @WeatherDetails.MaxTemperature°C
+    </p>
+
+    <button @onclick="GoBack">Go Back</button>
+}
+else
+{
+    <p>Loading weather details...</p>
+}
+
+@code {
+    private DayWeather WeatherDetails;
+
+    [Parameter]
+    public string Day { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        WeatherDetails = await WeatherService.GetWeatherDetails(Day);
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

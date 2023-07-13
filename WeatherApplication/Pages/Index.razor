@@ -1,0 +1,36 @@
+﻿@page "/"
+@using WeatherApplication.Data;
+@inject WeatherForecastService WeatherService
+
+
+<h3>Weather Forecast</h3>
+
+@if (WeatherForecast != null)
+{
+    @foreach (var day in WeatherForecast.Date)
+    {
+        <p>
+            <strong>@day.Day:</strong>
+            Min: @day.MinTemperature°C, Max: @day.MaxTemperature°C
+            <button @onclick="(() => ShowDetails(day))">Details</button>
+        </p>
+    }
+}
+else
+{
+    <p>Loading weather forecast...</p>
+}
+
+@code {
+    private WeatherForecast WeatherForecast;
+
+    protected override async Task OnInitializedAsync()
+    {
+        WeatherForecast = await WeatherService.GetWeatherForecast();
+    }
+
+    private void ShowDetails(DayWeather day)
+    {
+        NavigationManager.NavigateTo($"/details/{day.Day}");
+    }
+}
